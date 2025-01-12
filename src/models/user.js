@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt"
 import dotenv from "dotenv"
 dotenv.config()
 
-const SALT_ROUNDS = process.env.SALT_ROUNDS
+const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
@@ -46,5 +46,5 @@ UserSchema.pre('save', async function preSave(next) {
 UserSchema.methods.comparePassword = async function comparePassword(candidate) {// will add a function available for all documents to execute
      return bcrypt.compare(candidate, this.password)
 } 
-
-export default UserSchema
+const User = mongoose.model('User', UserSchema)
+export default User

@@ -1,13 +1,12 @@
-import express from "express";
-import req from "express/lib/request";
-import UserSchema from "../models/user"
+import User from "../models/user.js"
 
-const router = express.Router()
 
-const userRoutes = () => {
-    router.post('/register', async (req, res, next)=>{
+const routes = (app) => {
+    app.post('/register', async (req, res, next)=>{
         try {
-            const user = new UserSchema({
+            const userExist = await User.findOne({email: req.body.email})
+            if (userExist) return res.status(409).json({success: false, message: 'Email already used'})
+            const user = new User({
                 fullName : req.body.fullName,
                 email: req.body.email,
                 password: req.body.password
@@ -21,7 +20,6 @@ const userRoutes = () => {
         }
     })
 
-    return router
 }
 
-export default userRoutes
+export default routes
